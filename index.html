@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Localtutors Signup</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      background:#f3f4f6;
+      font-family:'DM Sans',sans-serif;
+      padding:40px 16px;
+      color:#111827;
+    }
+
+    .container{
+      max-width:760px;
+      margin:auto;
+    }
+
+    .card{
+      background:white;
+      padding:36px;
+      border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    h1{
+      font-family:'DM Serif Display',serif;
+      font-size:42px;
+      color:#1D9E75;
+      text-align:center;
+      margin-bottom:10px;
+    }
+
+    .subtitle{
+      text-align:center;
+      color:#6b7280;
+      margin-bottom:40px;
+      line-height:1.6;
+    }
+
+    h2{
+      font-family:'DM Serif Display',serif;
+      margin-top:32px;
+      margin-bottom:20px;
+      font-size:28px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .full{
+      grid-column:1 / -1;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+    }
+
+    label{
+      margin-bottom:8px;
+      font-size:14px;
+      font-weight:600;
+    }
+
+    input,
+    select,
+    textarea{
+      padding:14px 16px;
+      border:1px solid #d1d5db;
+      border-radius:12px;
+      font-size:15px;
+      font-family:'DM Sans',sans-serif;
+    }
+
+    textarea{
+      min-height:100px;
+      resize:vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus{
+      outline:none;
+      border-color:#1D9E75;
+      box-shadow:0 0 0 4px rgba(29,158,117,0.12);
+    }
+
+    .referral-row{
+      display:flex;
+      gap:12px;
+    }
+
+    .referral-row input{
+      flex:1;
+    }
+
+    button{
+      background:#1D9E75;
+      color:white;
+      border:none;
+      border-radius:12px;
+      padding:14px 22px;
+      cursor:pointer;
+      font-weight:700;
+      font-family:'DM Sans',sans-serif;
+    }
+
+    button:hover{
+      background:#178764;
+    }
+
+    .submit-btn{
+      width:100%;
+      margin-top:36px;
+      padding:16px;
+      font-size:16px;
+    }
+
+    .message{
+      margin-top:14px;
+      font-weight:600;
+      display:none;
+    }
+
+    .success{
+      color:#15803d;
+    }
+
+    .error{
+      color:#dc2626;
+    }
+
+    .pricing-box{
+      display:none;
+      margin-top:24px;
+      background:#f0fdf7;
+      border:1px solid #bbf7d0;
+      border-radius:16px;
+      padding:24px;
+    }
+
+    .pricing-box h3{
+      color:#166534;
+      margin-bottom:16px;
+    }
+
+    .price-item{
+      margin-bottom:12px;
+    }
+
+    .old-price{
+      text-decoration:line-through;
+      color:#6b7280;
+    }
+
+    .new-price{
+      color:#15803d;
+      font-size:20px;
+      font-weight:700;
+    }
+
+    .note{
+      margin-top:18px;
+      color:#4b5563;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    @media(max-width:700px){
+
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      .referral-row{
+        flex-direction:column;
+      }
+
+      h1{
+        font-size:34px;
+      }
+
+      h2{
+        font-size:24px;
+      }
+
+      .card{
+        padding:24px;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <h1>Localtutors</h1>
+
+    <p class="subtitle">
+      Professional matric & exam prep tutoring in South Africa.<br>
+      Run by Kyle — helping students achieve better results.
+    </p>
+
+    <form id="signupForm">
+
+      <!-- Parent Details -->
+
+      <h2>Parent Details</h2>
+
+      <div class="grid">
+
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" id="parentFirstName" required>
+        </div>
+
+        <div class="field">
+          <label>Surname</label>
+          <input type="text" id="parentSurname" required>
+        </div>
+
+        <div class="field">
+          <label>WhatsApp Number</label>
+          <input type="tel" id="whatsapp" required>
+        </div>
+
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="email" required>
+        </div>
+
+      </div>
+
+      <!-- Student Details -->
+
+      <h2>Student Details</h2>
+
+      <div class="grid">
+
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" id="studentFirstName" required>
+        </div>
+
+        <div class="field">
+          <label>Surname</label>
+          <input type="text" id="studentSurname" required>
+        </div>
+
+        <div class="field">
+          <label>Grade</label>
+
+          <select id="grade" required>
+
+            <option value="">Select Grade</option>
+
+            <option>Grade R</option>
+            <option>Grade 1</option>
+            <option>Grade 2</option>
+            <option>Grade 3</option>
+            <option>Grade 4</option>
+            <option>Grade 5</option>
+            <option>Grade 6</option>
+            <option>Grade 7</option>
+            <option>Grade 8</option>
+            <option>Grade 9</option>
+            <option>Grade 10</option>
+            <option>Grade 11</option>
+            <option>Grade 12 / Matric</option>
+
+          </select>
+        </div>
+
+        <div class="field full">
+
+          <label>Subject(s) Needed</label>
+
+          <textarea
+            id="subjects"
+            placeholder="Example: Mathematics, Accounting, Physical Sciences..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+      <!-- Referral -->
+
+      <h2>Referral Code (Optional)</h2>
+
+      <div class="referral-row">
+
+        <input
+          type="text"
+          id="referralCode"
+          placeholder="Enter referral code"
+        >
+
+        <button
+          type="button"
+          onclick="applyReferralCode()"
+        >
+          Apply
+        </button>
+
+      </div>
+
+      <div
+        id="successMessage"
+        class="message success"
+      >
+        Referral code applied successfully ✓
+      </div>
+
+      <div
+        id="errorMessage"
+        class="message error"
+      >
+        Invalid referral code.
+      </div>
+
+      <!-- Pricing -->
+
+      <div id="pricingBox" class="pricing-box">
+
+        <h3>Referral Pricing Applied</h3>
+
+        <div class="price-item">
+          Standard rate:
+          <span class="old-price">R650</span>
+        </div>
+
+        <div class="price-item">
+          Free trial lesson:
+          <strong>Included ✓</strong>
+        </div>
+
+        <div class="price-item">
+          You pay first month:
+          <span class="new-price">R488</span>
+        </div>
+
+        <div class="note">
+          Standard rate of R650/month applies from month 2.
+          Kyle will confirm your first session via WhatsApp.
+        </div>
+
+      </div>
+
+      <!-- Submit -->
+
+      <button
+        type="submit"
+        class="submit-btn"
+      >
+        Submit Signup
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+<script>
+
+  // ======================================
+  // SUPABASE CONNECTION
+  // ======================================
+
+  const SUPABASE_URL =
+    "https://wsyayedgezcclobbctho.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_859z8E5jIqKW0JN6Dc5n1g_u8OD72YB";
+
+  const client = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  // ======================================
+  // REFERRAL CODE CHECK
+  // ======================================
+
+  async function applyReferralCode(){
+
+    const code = document
+      .getElementById("referralCode")
+      .value
+      .trim()
+      .toUpperCase();
+
+    const successMessage =
+      document.getElementById("successMessage");
+
+    const errorMessage =
+      document.getElementById("errorMessage");
+
+    const pricingBox =
+      document.getElementById("pricingBox");
+
+    const { data, error } = await client
+      .from("referrals")
+      .select("*")
+      .eq("code", code)
+      .eq("active", true);
+
+    if(data && data.length > 0){
+
+      successMessage.style.display = "block";
+      errorMessage.style.display = "none";
+      pricingBox.style.display = "block";
+
+    } else {
+
+      successMessage.style.display = "none";
+      errorMessage.style.display = "block";
+      pricingBox.style.display = "none";
+
+    }
+
+  }
+
+  // ======================================
+  // FORM SUBMISSION
+  // ======================================
+
+  document
+    .getElementById("signupForm")
+    .addEventListener("submit", async function(e){
+
+      e.preventDefault();
+
+      const signupData = {
+
+        parent_first_name:
+          document.getElementById("parentFirstName").value,
+
+        parent_surname:
+          document.getElementById("parentSurname").value,
+
+        whatsapp:
+          document.getElementById("whatsapp").value,
+
+        email:
+          document.getElementById("email").value,
+
+        student_first_name:
+          document.getElementById("studentFirstName").value,
+
+        student_surname:
+          document.getElementById("studentSurname").value,
+
+        grade:
+          document.getElementById("grade").value,
+
+        subjects:
+          document.getElementById("subjects").value,
+
+        referral_code:
+          document.getElementById("referralCode").value
+
+      };
+
+      const { error } = await client
+        .from("signups")
+        .insert([signupData]);
+
+      if(error){
+
+        console.log(error);
+
+        alert(
+          "Something went wrong. Check console."
+        );
+
+      } else {
+
+        alert(
+          "Signup submitted successfully!"
+        );
+
+        document
+          .getElementById("signupForm")
+          .reset();
+
+        document
+          .getElementById("pricingBox")
+          .style.display = "none";
+
+      }
+
+    });
+
+</script>
+
+</body>
+</html>
