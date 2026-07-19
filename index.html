@@ -6,13 +6,11 @@
 
   <title>Localtutors Signup</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
   <style>
@@ -189,6 +187,54 @@
       line-height:1.6;
     }
 
+    .consultation-box{
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:24px;
+      margin-top:10px;
+    }
+
+    .consultation-question{
+      font-size:16px;
+      font-weight:600;
+      margin-bottom:18px;
+      line-height:1.5;
+    }
+
+    .radio-options{
+      display:flex;
+      gap:24px;
+      flex-wrap:wrap;
+    }
+
+    .radio-option{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      font-weight:500;
+    }
+
+    .radio-option input{
+      width:18px;
+      height:18px;
+      accent-color:#1D9E75;
+      cursor:pointer;
+    }
+
+    #consultationDetails{
+      display:none;
+      margin-top:24px;
+    }
+
+    .availability-note{
+      margin-top:10px;
+      color:#6b7280;
+      font-size:13px;
+      line-height:1.5;
+    }
+
     @media(max-width:700px){
 
       .grid{
@@ -197,6 +243,11 @@
 
       .referral-row{
         flex-direction:column;
+      }
+
+      .radio-options{
+        flex-direction:column;
+        gap:14px;
       }
 
       h1{
@@ -215,6 +266,7 @@
 
   </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -229,8 +281,6 @@
     </p>
 
     <form id="signupForm">
-
-      <!-- Parent Details -->
 
       <h2>Parent Details</h2>
 
@@ -257,8 +307,6 @@
         </div>
 
       </div>
-
-      <!-- Student Details -->
 
       <h2>Student Details</h2>
 
@@ -313,7 +361,95 @@
 
       </div>
 
-      <!-- Referral -->
+      <h2>Free Consultation Call</h2>
+
+      <div class="consultation-box">
+
+        <div class="consultation-question">
+          Would you like to schedule a free consultation call with Kyle?
+        </div>
+
+        <div class="radio-options">
+
+          <label class="radio-option">
+
+            <input
+              type="radio"
+              name="consultation"
+              value="Yes"
+              onclick="showConsultationDetails()"
+              required
+            >
+
+            Yes, I'd like to schedule a call
+
+          </label>
+
+          <label class="radio-option">
+
+            <input
+              type="radio"
+              name="consultation"
+              value="No"
+              onclick="hideConsultationDetails()"
+            >
+
+            No, please contact me first
+
+          </label>
+
+        </div>
+
+        <div id="consultationDetails">
+
+          <div class="grid">
+
+            <div class="field">
+
+              <label>Preferred Date</label>
+
+              <input
+                type="date"
+                id="consultationDate"
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Preferred Time</label>
+
+              <select id="consultationTime">
+
+                <option value="">
+                  Select a preferred time
+                </option>
+
+                <option>08:00 - 09:00</option>
+                <option>09:00 - 10:00</option>
+                <option>10:00 - 11:00</option>
+                <option>11:00 - 12:00</option>
+                <option>12:00 - 13:00</option>
+                <option>13:00 - 14:00</option>
+                <option>14:00 - 15:00</option>
+                <option>15:00 - 16:00</option>
+                <option>16:00 - 17:00</option>
+                <option>17:00 - 18:00</option>
+                <option>18:00 - 19:00</option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+          <p class="availability-note">
+            Please select your preferred date and time. Kyle will confirm availability with you via WhatsApp.
+          </p>
+
+        </div>
+
+      </div>
 
       <h2>Referral Code (Optional)</h2>
 
@@ -334,8 +470,6 @@
 
       </div>
 
-      <!-- Messages -->
-
       <div
         id="successMessage"
         class="message success"
@@ -350,8 +484,6 @@
         Invalid referral code.
       </div>
 
-      <!-- Pricing Box -->
-
       <div
         id="pricingBox"
         class="pricing-box"
@@ -360,34 +492,43 @@
         <h3>Referral Pricing Applied</h3>
 
         <div class="price-item">
+
           Standard rate:
+
           <span class="old-price">
             R650
           </span>
+
         </div>
 
         <div class="price-item">
+
           Free trial lesson:
+
           <strong>
             Included ✓
           </strong>
+
         </div>
 
         <div class="price-item">
+
           You pay first month:
+
           <span class="new-price">
             R488
           </span>
+
         </div>
 
         <div class="note">
+
           Standard rate of R650/month applies from month 2.
           Kyle will confirm your first session via WhatsApp.
+
         </div>
 
       </div>
-
-      <!-- Submit -->
 
       <button
         type="submit"
@@ -402,11 +543,8 @@
 
 </div>
 
-<script>
 
-  // ======================================
-  // SUPABASE
-  // ======================================
+<script>
 
   const SUPABASE_URL =
     "https://wsyayedgezcclobbctho.supabase.co";
@@ -419,9 +557,50 @@
     SUPABASE_KEY
   );
 
-  // ======================================
-  // REFERRAL CHECK
-  // ======================================
+
+  function showConsultationDetails(){
+
+    const details =
+      document.getElementById("consultationDetails");
+
+    const date =
+      document.getElementById("consultationDate");
+
+    const time =
+      document.getElementById("consultationTime");
+
+    details.style.display = "block";
+
+    date.required = true;
+
+    time.required = true;
+
+  }
+
+
+  function hideConsultationDetails(){
+
+    const details =
+      document.getElementById("consultationDetails");
+
+    const date =
+      document.getElementById("consultationDate");
+
+    const time =
+      document.getElementById("consultationTime");
+
+    details.style.display = "none";
+
+    date.required = false;
+
+    time.required = false;
+
+    date.value = "";
+
+    time.value = "";
+
+  }
+
 
   async function applyReferralCode(){
 
@@ -440,31 +619,34 @@
     const pricingBox =
       document.getElementById("pricingBox");
 
+
     const { data, error } = await client
       .from("referrals")
       .select("*")
       .eq("code", code)
       .eq("active", true);
 
+
     if(data && data.length > 0){
 
       successMessage.style.display = "block";
+
       errorMessage.style.display = "none";
+
       pricingBox.style.display = "block";
 
     } else {
 
       successMessage.style.display = "none";
+
       errorMessage.style.display = "block";
+
       pricingBox.style.display = "none";
 
     }
 
   }
 
-  // ======================================
-  // FORM SUBMIT
-  // ======================================
 
   document
     .getElementById("signupForm")
@@ -472,44 +654,88 @@
 
       e.preventDefault();
 
+
+      const consultationChoice =
+        document.querySelector(
+          'input[name="consultation"]:checked'
+        ).value;
+
+
+      const consultationDate =
+        document.getElementById(
+          "consultationDate"
+        ).value;
+
+
+      const consultationTime =
+        document.getElementById(
+          "consultationTime"
+        ).value;
+
+
       const signupData = {
 
         parent_first_name:
-          document.getElementById("parentFirstName").value,
+          document.getElementById(
+            "parentFirstName"
+          ).value,
 
         parent_surname:
-          document.getElementById("parentSurname").value,
+          document.getElementById(
+            "parentSurname"
+          ).value,
 
         whatsapp:
-          document.getElementById("whatsapp").value,
+          document.getElementById(
+            "whatsapp"
+          ).value,
 
         email:
-          document.getElementById("email").value,
+          document.getElementById(
+            "email"
+          ).value,
 
         student_first_name:
-          document.getElementById("studentFirstName").value,
+          document.getElementById(
+            "studentFirstName"
+          ).value,
 
         student_surname:
-          document.getElementById("studentSurname").value,
+          document.getElementById(
+            "studentSurname"
+          ).value,
 
         grade:
-          document.getElementById("grade").value,
+          document.getElementById(
+            "grade"
+          ).value,
 
         subjects:
-          document.getElementById("subjects").value,
+          document.getElementById(
+            "subjects"
+          ).value,
 
         referral_code:
-          document.getElementById("referralCode").value
+          document.getElementById(
+            "referralCode"
+          ).value,
+
+        consultation_requested:
+          consultationChoice,
+
+        consultation_date:
+          consultationDate || null,
+
+        consultation_time:
+          consultationTime || null
 
       };
 
-      // ======================================
-      // SAVE TO SUPABASE
-      // ======================================
 
       const { error } = await client
         .from("signups")
         .insert([signupData]);
+
 
       if(error){
 
@@ -519,93 +745,140 @@
           "Something went wrong. Check console."
         );
 
-      } else {
-
-        // ======================================
-        // SEND EMAIL (FREE)
-        // ======================================
-
-        fetch(
-  "https://formsubmit.co/ajax/localtutors.upington@gmail.com",
-          {
-
-            method: "POST",
-
-            headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json"
-            },
-
-            body: JSON.stringify({
-
-              subject:
-                "New Localtutors Signup",
-
-              message:
-
-                "NEW LOCALTUTORS SIGNUP\n\n" +
-
-                "Parent: " +
-                signupData.parent_first_name +
-                " " +
-                signupData.parent_surname +
-                "\n\n" +
-
-                "WhatsApp: " +
-                signupData.whatsapp +
-                "\n\n" +
-
-                "Email: " +
-                signupData.email +
-                "\n\n" +
-
-                "Student: " +
-                signupData.student_first_name +
-                " " +
-                signupData.student_surname +
-                "\n\n" +
-
-                "Grade: " +
-                signupData.grade +
-                "\n\n" +
-
-                "Subjects: " +
-                signupData.subjects +
-                "\n\n" +
-
-                "Referral Code: " +
-                signupData.referral_code
-
-            })
-
-          }
-        );
-
-        // ======================================
-        // SUCCESS
-        // ======================================
-
-        alert(
-          "Signup submitted successfully!"
-        );
-
-        document
-          .getElementById("signupForm")
-          .reset();
-
-        document
-          .getElementById("pricingBox")
-          .style.display = "none";
-
-        document
-          .getElementById("successMessage")
-          .style.display = "none";
-
-        document
-          .getElementById("errorMessage")
-          .style.display = "none";
+        return;
 
       }
+
+
+      fetch(
+        "https://formsubmit.co/ajax/localtutors.upington@gmail.com",
+        {
+
+          method: "POST",
+
+          headers: {
+
+            "Content-Type":
+              "application/json",
+
+            "Accept":
+              "application/json"
+
+          },
+
+          body: JSON.stringify({
+
+            subject:
+              "New Localtutors Signup",
+
+            message:
+
+              "NEW LOCALTUTORS SIGNUP\n\n" +
+
+              "Parent: " +
+              signupData.parent_first_name +
+              " " +
+              signupData.parent_surname +
+
+              "\n\n" +
+
+              "WhatsApp: " +
+              signupData.whatsapp +
+
+              "\n\n" +
+
+              "Email: " +
+              signupData.email +
+
+              "\n\n" +
+
+              "Student: " +
+              signupData.student_first_name +
+              " " +
+              signupData.student_surname +
+
+              "\n\n" +
+
+              "Grade: " +
+              signupData.grade +
+
+              "\n\n" +
+
+              "Subjects: " +
+              signupData.subjects +
+
+              "\n\n" +
+
+              "Referral Code: " +
+              signupData.referral_code +
+
+              "\n\n" +
+
+              "Consultation Requested: " +
+              signupData.consultation_requested +
+
+              "\n\n" +
+
+              "Preferred Consultation Date: " +
+              (
+                signupData.consultation_date ||
+                "Not selected"
+              ) +
+
+              "\n\n" +
+
+              "Preferred Consultation Time: " +
+              (
+                signupData.consultation_time ||
+                "Not selected"
+              )
+
+          })
+
+        }
+
+      );
+
+
+      alert(
+        "Signup submitted successfully! Kyle will be in touch soon."
+      );
+
+
+      document
+        .getElementById(
+          "signupForm"
+        )
+        .reset();
+
+
+      document
+        .getElementById(
+          "pricingBox"
+        )
+        .style.display = "none";
+
+
+      document
+        .getElementById(
+          "successMessage"
+        )
+        .style.display = "none";
+
+
+      document
+        .getElementById(
+          "errorMessage"
+        )
+        .style.display = "none";
+
+
+      document
+        .getElementById(
+          "consultationDetails"
+        )
+        .style.display = "none";
+
 
     });
 
