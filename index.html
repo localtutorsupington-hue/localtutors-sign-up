@@ -282,6 +282,8 @@
 
     <form id="signupForm">
 
+      <!-- PARENT DETAILS -->
+
       <h2>Parent Details</h2>
 
       <div class="grid">
@@ -307,6 +309,9 @@
         </div>
 
       </div>
+
+
+      <!-- STUDENT DETAILS -->
 
       <h2>Student Details</h2>
 
@@ -361,6 +366,9 @@
 
       </div>
 
+
+      <!-- CONSULTATION -->
+
       <h2>Free Consultation Call</h2>
 
       <div class="consultation-box">
@@ -400,6 +408,7 @@
 
         </div>
 
+
         <div id="consultationDetails">
 
           <div class="grid">
@@ -415,6 +424,7 @@
 
             </div>
 
+
             <div class="field">
 
               <label>Preferred Time</label>
@@ -425,7 +435,6 @@
                   Select a preferred time
                 </option>
 
-                <option>08:00 - 09:00</option>
                 <option>09:00 - 10:00</option>
                 <option>10:00 - 11:00</option>
                 <option>11:00 - 12:00</option>
@@ -435,7 +444,6 @@
                 <option>15:00 - 16:00</option>
                 <option>16:00 - 17:00</option>
                 <option>17:00 - 18:00</option>
-                <option>18:00 - 19:00</option>
 
               </select>
 
@@ -445,11 +453,15 @@
 
           <p class="availability-note">
             Please select your preferred date and time. Kyle will confirm availability with you via WhatsApp.
+            Consultations are available between 9:00 and 18:00.
           </p>
 
         </div>
 
       </div>
+
+
+      <!-- REFERRAL -->
 
       <h2>Referral Code (Optional)</h2>
 
@@ -470,6 +482,9 @@
 
       </div>
 
+
+      <!-- MESSAGES -->
+
       <div
         id="successMessage"
         class="message success"
@@ -483,6 +498,9 @@
       >
         Invalid referral code.
       </div>
+
+
+      <!-- PRICING -->
 
       <div
         id="pricingBox"
@@ -530,6 +548,9 @@
 
       </div>
 
+
+      <!-- SUBMIT -->
+
       <button
         type="submit"
         class="submit-btn"
@@ -546,6 +567,10 @@
 
 <script>
 
+  // ======================================
+  // SUPABASE CONNECTION
+  // ======================================
+
   const SUPABASE_URL =
     "https://wsyayedgezcclobbctho.supabase.co";
 
@@ -558,16 +583,26 @@
   );
 
 
+  // ======================================
+  // CONSULTATION DETAILS
+  // ======================================
+
   function showConsultationDetails(){
 
     const details =
-      document.getElementById("consultationDetails");
+      document.getElementById(
+        "consultationDetails"
+      );
 
     const date =
-      document.getElementById("consultationDate");
+      document.getElementById(
+        "consultationDate"
+      );
 
     const time =
-      document.getElementById("consultationTime");
+      document.getElementById(
+        "consultationTime"
+      );
 
     details.style.display = "block";
 
@@ -581,13 +616,19 @@
   function hideConsultationDetails(){
 
     const details =
-      document.getElementById("consultationDetails");
+      document.getElementById(
+        "consultationDetails"
+      );
 
     const date =
-      document.getElementById("consultationDate");
+      document.getElementById(
+        "consultationDate"
+      );
 
     const time =
-      document.getElementById("consultationTime");
+      document.getElementById(
+        "consultationTime"
+      );
 
     details.style.display = "none";
 
@@ -602,287 +643,373 @@
   }
 
 
+  // ======================================
+  // REFERRAL CODE CHECK
+  // ======================================
+
   async function applyReferralCode(){
 
     const code = document
-      .getElementById("referralCode")
+      .getElementById(
+        "referralCode"
+      )
       .value
       .trim()
       .toUpperCase();
 
+
     const successMessage =
-      document.getElementById("successMessage");
+      document.getElementById(
+        "successMessage"
+      );
+
 
     const errorMessage =
-      document.getElementById("errorMessage");
+      document.getElementById(
+        "errorMessage"
+      );
+
 
     const pricingBox =
-      document.getElementById("pricingBox");
+      document.getElementById(
+        "pricingBox"
+      );
 
 
     const { data, error } = await client
+
       .from("referrals")
+
       .select("*")
+
       .eq("code", code)
+
       .eq("active", true);
 
 
     if(data && data.length > 0){
 
-      successMessage.style.display = "block";
+      successMessage.style.display =
+        "block";
 
-      errorMessage.style.display = "none";
+      errorMessage.style.display =
+        "none";
 
-      pricingBox.style.display = "block";
+      pricingBox.style.display =
+        "block";
 
     } else {
 
-      successMessage.style.display = "none";
+      successMessage.style.display =
+        "none";
 
-      errorMessage.style.display = "block";
+      errorMessage.style.display =
+        "block";
 
-      pricingBox.style.display = "none";
+      pricingBox.style.display =
+        "none";
 
     }
 
   }
 
 
+  // ======================================
+  // FORM SUBMISSION
+  // ======================================
+
   document
     .getElementById("signupForm")
-    .addEventListener("submit", async function(e){
+    .addEventListener(
+      "submit",
+      async function(e){
 
-      e.preventDefault();
-
-
-      const consultationChoice =
-        document.querySelector(
-          'input[name="consultation"]:checked'
-        ).value;
+        e.preventDefault();
 
 
-      const consultationDate =
-        document.getElementById(
-          "consultationDate"
-        ).value;
+        const consultationSelected =
+          document.querySelector(
+            'input[name="consultation"]:checked'
+          );
 
 
-      const consultationTime =
-        document.getElementById(
-          "consultationTime"
-        ).value;
+        const consultationChoice =
+          consultationSelected
+            ? consultationSelected.value
+            : "No";
 
 
-      const signupData = {
-
-        parent_first_name:
+        const consultationDate =
           document.getElementById(
-            "parentFirstName"
-          ).value,
+            "consultationDate"
+          ).value;
 
-        parent_surname:
+
+        const consultationTime =
           document.getElementById(
-            "parentSurname"
-          ).value,
-
-        whatsapp:
-          document.getElementById(
-            "whatsapp"
-          ).value,
-
-        email:
-          document.getElementById(
-            "email"
-          ).value,
-
-        student_first_name:
-          document.getElementById(
-            "studentFirstName"
-          ).value,
-
-        student_surname:
-          document.getElementById(
-            "studentSurname"
-          ).value,
-
-        grade:
-          document.getElementById(
-            "grade"
-          ).value,
-
-        subjects:
-          document.getElementById(
-            "subjects"
-          ).value,
-
-        referral_code:
-          document.getElementById(
-            "referralCode"
-          ).value,
-
-        consultation_requested:
-          consultationChoice,
-
-        consultation_date:
-          consultationDate || null,
-
-        consultation_time:
-          consultationTime || null
-
-      };
+            "consultationTime"
+          ).value;
 
 
-      const { error } = await client
-        .from("signups")
-        .insert([signupData]);
+        // All consultation values are
+        // converted to plain text.
+        // This avoids Supabase date/time
+        // conversion issues.
+
+        const signupData = {
+
+          parent_first_name:
+            document.getElementById(
+              "parentFirstName"
+            ).value,
+
+          parent_surname:
+            document.getElementById(
+              "parentSurname"
+            ).value,
+
+          whatsapp:
+            document.getElementById(
+              "whatsapp"
+            ).value,
+
+          email:
+            document.getElementById(
+              "email"
+            ).value,
+
+          student_first_name:
+            document.getElementById(
+              "studentFirstName"
+            ).value,
+
+          student_surname:
+            document.getElementById(
+              "studentSurname"
+            ).value,
+
+          grade:
+            document.getElementById(
+              "grade"
+            ).value,
+
+          subjects:
+            document.getElementById(
+              "subjects"
+            ).value,
+
+          referral_code:
+            document.getElementById(
+              "referralCode"
+            ).value,
+
+          consultation_requested:
+            String(
+              consultationChoice
+            ),
+
+          consultation_date:
+            String(
+              consultationDate
+            ),
+
+          consultation_time:
+            String(
+              consultationTime
+            )
+
+        };
 
 
-      if(error){
+        // ======================================
+        // SAVE TO SUPABASE
+        // ======================================
 
-        console.log(error);
+        const { error } = await client
 
-        alert(
-          "Something went wrong. Check console."
-        );
+          .from("signups")
 
-        return;
-
-      }
+          .insert([signupData]);
 
 
-      fetch(
-        "https://formsubmit.co/ajax/localtutors.upington@gmail.com",
-        {
+        if(error){
 
-          method: "POST",
+          console.error(
+            "SUPABASE ERROR:",
+            error
+          );
 
-          headers: {
+          alert(
+            "There was a problem submitting your signup.\n\n" +
+            error.message
+          );
 
-            "Content-Type":
-              "application/json",
-
-            "Accept":
-              "application/json"
-
-          },
-
-          body: JSON.stringify({
-
-            subject:
-              "New Localtutors Signup",
-
-            message:
-
-              "NEW LOCALTUTORS SIGNUP\n\n" +
-
-              "Parent: " +
-              signupData.parent_first_name +
-              " " +
-              signupData.parent_surname +
-
-              "\n\n" +
-
-              "WhatsApp: " +
-              signupData.whatsapp +
-
-              "\n\n" +
-
-              "Email: " +
-              signupData.email +
-
-              "\n\n" +
-
-              "Student: " +
-              signupData.student_first_name +
-              " " +
-              signupData.student_surname +
-
-              "\n\n" +
-
-              "Grade: " +
-              signupData.grade +
-
-              "\n\n" +
-
-              "Subjects: " +
-              signupData.subjects +
-
-              "\n\n" +
-
-              "Referral Code: " +
-              signupData.referral_code +
-
-              "\n\n" +
-
-              "Consultation Requested: " +
-              signupData.consultation_requested +
-
-              "\n\n" +
-
-              "Preferred Consultation Date: " +
-              (
-                signupData.consultation_date ||
-                "Not selected"
-              ) +
-
-              "\n\n" +
-
-              "Preferred Consultation Time: " +
-              (
-                signupData.consultation_time ||
-                "Not selected"
-              )
-
-          })
+          return;
 
         }
 
-      );
+
+        // ======================================
+        // SEND EMAIL
+        // ======================================
+
+        try{
+
+          await fetch(
+            "https://formsubmit.co/ajax/localtutors.upington@gmail.com",
+            {
+
+              method:"POST",
+
+              headers:{
+
+                "Content-Type":
+                  "application/json",
+
+                "Accept":
+                  "application/json"
+
+              },
+
+              body:JSON.stringify({
+
+                subject:
+                  "New Localtutors Signup",
+
+                message:
+
+                  "NEW LOCALTUTORS SIGNUP\n\n" +
+
+                  "Parent: " +
+                  signupData.parent_first_name +
+                  " " +
+                  signupData.parent_surname +
+
+                  "\n\n" +
+
+                  "WhatsApp: " +
+                  signupData.whatsapp +
+
+                  "\n\n" +
+
+                  "Email: " +
+                  signupData.email +
+
+                  "\n\n" +
+
+                  "Student: " +
+                  signupData.student_first_name +
+                  " " +
+                  signupData.student_surname +
+
+                  "\n\n" +
+
+                  "Grade: " +
+                  signupData.grade +
+
+                  "\n\n" +
+
+                  "Subjects: " +
+                  signupData.subjects +
+
+                  "\n\n" +
+
+                  "Referral Code: " +
+                  (
+                    signupData.referral_code ||
+                    "None"
+                  ) +
+
+                  "\n\n" +
+
+                  "Consultation Requested: " +
+                  signupData.consultation_requested +
+
+                  "\n\n" +
+
+                  "Preferred Consultation Date: " +
+                  (
+                    signupData.consultation_date ||
+                    "Not selected"
+                  ) +
+
+                  "\n\n" +
+
+                  "Preferred Consultation Time: " +
+                  (
+                    signupData.consultation_time ||
+                    "Not selected"
+                  )
+
+              })
+
+            }
+
+          );
+
+        } catch(emailError){
+
+          console.error(
+            "EMAIL ERROR:",
+            emailError
+          );
+
+        }
 
 
-      alert(
-        "Signup submitted successfully! Kyle will be in touch soon."
-      );
+        // ======================================
+        // SUCCESS
+        // ======================================
+
+        alert(
+          "Signup submitted successfully! Kyle will be in touch soon."
+        );
 
 
-      document
-        .getElementById(
-          "signupForm"
-        )
-        .reset();
+        document
+          .getElementById(
+            "signupForm"
+          )
+          .reset();
 
 
-      document
-        .getElementById(
-          "pricingBox"
-        )
-        .style.display = "none";
+        document
+          .getElementById(
+            "pricingBox"
+          )
+          .style.display =
+          "none";
 
 
-      document
-        .getElementById(
-          "successMessage"
-        )
-        .style.display = "none";
+        document
+          .getElementById(
+            "successMessage"
+          )
+          .style.display =
+          "none";
 
 
-      document
-        .getElementById(
-          "errorMessage"
-        )
-        .style.display = "none";
+        document
+          .getElementById(
+            "errorMessage"
+          )
+          .style.display =
+          "none";
 
 
-      document
-        .getElementById(
-          "consultationDetails"
-        )
-        .style.display = "none";
+        document
+          .getElementById(
+            "consultationDetails"
+          )
+          .style.display =
+          "none";
 
 
-    });
+      }
+    );
 
 </script>
 
 </body>
 </html>
+
